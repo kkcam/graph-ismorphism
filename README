@@ -1,0 +1,12 @@
+# How to use dretodot
+[nauty installation]./dretodot ./graphs/graph.dre ./out.dot
+
+# How to use nauty - see dreadnaut pdf
+dreadnaut
+
+# How to use graphviz
+man graphviz
+dotty ...
+
+# How to use cryptominisat
+cryptominisat_simple -verb=0 [filename]
