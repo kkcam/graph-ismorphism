@@ -1,0 +1,76 @@
+#!/bin/bash
+# run ./test-script >> test-results.txt
+# TODO RUN NAUTY DEPENDING ON WHETHER CLASS IS SPARSE OR DENSE
+# TODO 
+
+# PREP CSV
+rm test-results.csv
+printf '%s\n' Nodes,Time | paste -sd ' ' >> test-results.csv
+
+# ITERATE GRAPHS
+for i in $( ls -v ./graphs/ ); do
+	printf "\n> Graph Type: $i\n"
+	printf '%s\n' $i, | paste -sd ' ' >> test-results.csv
+
+	types=(Ad As At)
+	for typ in "${types[@]}"; do
+		case "$typ" in
+		"Ad")
+			mode="nauty dense"
+		;;
+		"As")
+			mode="nauty sparse"
+		;;
+		*)
+			mode="traces"
+		;;
+		esac
+
+		printf "\n> Mode: $mode\n"
+		printf '%s\n' $mode, | paste -sd ' ' >> test-results.csv
+
+		# AUTOMORPHISM GROUP
+		printf "\n>$i>$mode> Test: Automorphism group\n"
+		printf '%s\n' Automorphism Group, | paste -sd ' ' >> test-results.csv
+		for j in $( ls -v ./graphs/$i ); do
+			printf "\n$i>$mode>a>$j> "
+			HEAD=`head ./graphs/$i/$j`
+			OUT=$(timeout 10s ./nauty26r7/dreadnaut <<EOF
+			$typ
+			-a V=0 -m
+			<./graphs/$i/$j
+			x
+			q
+EOF
+			)
+			nodes=$(echo $HEAD|grep -P '(n=?)=\d+' -o)
+			time=$(echo $OUT|grep -P '(time=?) = \d+.\d+\d+' -o)
+			nodes=${nodes#*=}
+			time=${time#*= }
+			printf '%s\n' $nodes,$time | paste -sd ' ' >> test-results.csv
+			printf "n=$nodes $OUT"
+		done
+
+		# CANONICAL LABELLING
+		printf "\n>$i>$mode> Test: Canonical Labelling\n"
+		printf '%s\n' Canonical Labelling, | paste -sd ' ' >> test-results.csv
+		for j in $( ls -v ./graphs/$i ); do
+			printf "\n$i>$mode>c>$j> "
+			HEAD=`head ./graphs/$i/$j`
+			OUT=$(timeout 10s ./nauty26r7/dreadnaut <<EOF
+			$typ
+			c -a V=0 -m
+			<./graphs/$i/$j
+			x
+			q
+EOF
+			)
+			nodes=$(echo $HEAD|grep -P '(n=?)=\d+' -o)
+			time=$(echo $OUT|grep -P '(time=?) = \d+.\d+\d+' -o)
+			nodes=${nodes#*=}
+			time=${time#*= }
+			printf '%s\n' $nodes,$time | paste -sd ' ' >> test-results.csv
+			printf "n=$nodes $OUT"
+		done
+	done
+done

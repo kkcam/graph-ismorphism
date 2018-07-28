@@ -1,0 +1,22 @@
+%!TEX root = ../thesis.tex
+%*******************************************************************************
+%****************************** Third Chapter **********************************
+%*******************************************************************************
+\chapter{Conclusion}
+
+% **************************** Define Graphics Path **************************
+\ifpdf
+    \graphicspath{{Chapter3/Figs/Raster/}{Chapter3/Figs/PDF/}{Chapter3/Figs/}}
+\else
+    \graphicspath{{Chapter3/Figs/Vector/}{Chapter3/Figs/}}
+\fi
+
+In summary, we have presented and produced a family of graphs which execute slowly on the fast graph isomorphism solver Traces. We provided the capability to generate difficult graphs at random, satisfying  rigidity and resistance the vertex colour refinement algorithm underlying the solving program. We utilised a SAT solver, and implemented concepts from combinatorics, computational complexity and graph theory. Our package of graphs consistently took longer than three hours to execute for many instances. We successfully utilised Gaussian elimination and unique satisfiability of 3-XOR-Formulas as good guess of odd and $k$-locally consistent instances. Furthermore, we executed our searching algorithm for many thousands of iterations to incrementally increase the complexity of graphs. In addition, we provided experimental proof of the importance of $k$-local consistency when generating difficult instances. Including benchmark tests with existing graph families. 
+
+Previously, the best known randomly generated graphs were those with differing edge probability. Here we provide open source code to randomly generate difficult graphs to further our understanding of the graph isomorphism problem.   
+
+\section[Further Work]{Further Work}
+During the time of this project, another analysis into benchmark graph isomorphism solvers was produced. The work in question is of Neuen and Schweitzer, which utilised similar ideas of multipedes to generate difficult graphs, however the approach differed in that shrunken multipedes were used, in contrast to our method of randomly generating such graphs from an 3-XOR-Formula \cite{neuen2017benchmark}. During the final stages of experiments, we selected a similar timeout value to this paper (three hours). We must clarify that this paper arose during our final stages, and influenced our work only by means of determining a timeout value. This was done to test our graph against the similar construction. Given that experiments were already underway, we point to this work to compare our own. Since different techniques were used to generate similar graphs. That is, using a form of reduction to make graphs more difficult. A point of departure would be to include the newly created package and test against this.
+
+In this work, there is potential to find stronger and more difficult instances than the ones we have found. By using multiple experiments to build up a database of slow graphs, the ones we have provided in packages are assuredly not the slowest existing. To this end, a point of departure would be continuously run our searching algorithm, make improvements to the efficiency in locating and incorporate better techniques to find systems. The backbone of finding difficult graphs for the GI problem has been presented. With further work to this algorithm, we can undoubtedly come a step closer to understanding the graph isomorphism problem and its limits.
+

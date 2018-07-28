@@ -1,0 +1,44 @@
+
+\subsection[XOR Formulas]{XOR Formulas}
+Fix a countable set $\mathcal{X}$ of Boolean variables. Let $X,Y{\in}\mathcal{X}$. A 3-XOR-formula is a finite set of clauses, where each clause contains exactly 3 literals, each of which is either a variable $X$ or a negated variable $\bar{X}$.
+\par
+If there exists an assignment $T:\mathcal{X}{\Rightarrow}\{0,1\}$ of truth values to the variables of $\mathcal{X}$ such that every clause of $\phi$ contains an even number of true literals, then we say that $\phi$ is $satisfiable$ and $unsatisfiable$ otherwise.
+\par
+Given a 3-XOR-formula $\phi$, a system of linear equations over the 2-element $F_{2}$ can be constructed. That is, for every clause $C$ of $phi$, we construct the equation $x+y+z=c$ where $x,y,z$ are variables occurring in the literals of $C$ and $c=1$ if an odd number appear negated and $0$ otherwise. It is easily verified that this system of equations has a solution  if, and only if, $\phi$ is satisfiable. Note that two distinct clauses may result in the same equation. Two clauses are $equivalent$ if they give rise to the same equation.
+
+\subsection[k-local consistency]{\textit{k}-local consistency}
+Our concern is of 3-XOR-formulas that are $unsatisfiable$ but $k-locally$ $consistent$, for a suitable integer $k$. For our purposes, we define $k$-local consistency by means of the following pebble game played by two players called Spoiler and Verified. This game is played on a 3-XOR-foruma $\phi$ with $k$ pebbles $p_{1},p_{2},...,p_{k}$. At each move, Spoiler chooses a pebble $p_{i}$ (either one that is already in play, or an unused one) and places it on variable $X$ appearing in $\phi$. In response, Duplicator has to choose a value from ${0,1}$ for the variable $X$. If, as a result, there is some clause $C$ such that all literals in $C$ have pebbles on them and the assignment of values to them given by Duplicator results in $C$ being unsatsifiable, then Spoiler has won the game. Otherwise the game may continue. If Duplicator has a means of playing the game infinitely without loosing, we say that $\phi$ is $k$-locally consistent.
+\par
+It is known that $k$-local consistency has a close relationship with definiability in the logic $\exists L_{\infty\omega}^{k}$ - the existential positive fragment of the infinitary logic with $k$ variables. In particular, the class of non $k$-locally consistent formulas are definable in this logic, whereas the class of unsatisfiable formulas are not. There are, for every $k$, unsatisfiable formulas that are $k$-locally consistent.
+
+\subsection[Random XOR Formulas]{Random XOR Formulas}
+For fixed positive ingegers $m,n$ we write $F(m,n)$ for the set of all 3-XOR-formulas over the variables $X_{1},X_{2},...,X_{n}$ containing exactly $m$ inequivalent clauses. We also write $\mathcal{F}(m,n)$ for the uniform probability distribution over $F(m,n)$. It is known that for large values of $m$ and $n$ with $m>n$, a random formula drawn from this distribution is unsatisfiable.
+\par
+Also, for any $k$ there is a constant $c_{k}$ such that, for sufficiently large $m$ and $n$ with $m>c_{k}n$, a random formula drawn from $\mathcal{F}(m,n)$ is $k$-locally consistent. This is proved for 3-CNF-formulas, but should also follow for 3-XOR-formulas from results.
+
+\subsection[Homogeneous Systems of Equations]{Homogeneous Systems of Equations}
+Thinking of a 3-XOR-formula as a system of equations, we say that it is $homogeneous$ if the right hand side of an equation is $0$. Note that a homogeneous system of equations is always satisfied by the constant $0$ assignment. That is, all literals $X$ associated with a system $\phi$ are given the value $0$. Say that a homogeneous system of equations is $uniquely$ $satisfiable$ if the all zero assignment is the only satisfying assignment to literals.
+
+\subsection[Graph Construction]{Graph Construction}
+We give a construction of graphs from formulas that is inspired by those of Cai et al. and multipedes.
+\par
+For any 3-XOR-formula $\phi$, we define a graph $G_{\phi}$ by the following construction: If $\phi$ has $m$ inequivalent clauses and $n$ variables, $G_{\phi}$ has a total of $4m+2n+3(n-1)$ vertices.
+\par
+For each clause $C$ of $\phi$, let $C_{1}=C$ and let $C_{2},C_{3},C_{4}$ be the three clauses equivalent to $C$ obtained by negated exactly two of the literals of $C$. We then have a vertex in $G_{\phi}$ for each of the these clauses. Also, for every variable $X$ in $\phi$, we have two vertices $X^{0}$ and $X^{1}$. In addition, for each $i$ with $1\geq i < n$ we have three vertices $i_{l}, i_{r}, i_{s}$.
+\par
+The edges are described as follows: For every clause $C$, if the literal $X$ occurs in $C$, then we have an edge from $C$ to $X^{1}$; if the literal $\bar{X}$ occurs in $C$, then we have an edge from $C$ to $X^{0}$. There exists an edge between $X^{0}$ and $X^{1}$. For every $i$ we also also have the edges: $(i_{l},i_{r}),(i_{r},i_{s}), (i_{l},X_{i}^{0}), (i_{l},X_{i}^{1}), (i_{r},X_{i+1}^{0}) and (i_{r},X_{i+1}^{1})$.
+\par
+Note that the role of the vertices $i_{l}, i_{r}, i_{s}$ is to eliminate any automorphisms based on a permutation of the variables. In implementation, they may not be required if it can be proven that a random formula does not admit such automorphisms anyway. Such a construction would have $4m+2n$ vertices, without the edges corresponding to $i_{l}, i_{r}, i_{s}$.
+\par
+Proposition 1 REF
+
+\subsection[Ck Rigidity]{$C^{k}$ Rigidity}
+$C^{k}$ is the fragment of first-order logic where we allow counting quantifiers: $\exists^{i}x\phi$ means that there exists at least $i$ distinct elements $x$ satisfying $\phi$, but each formula has at most $k$ distinct variables.
+\par
+For a graph $G$ and a vertex $v \in V(G)$, the $C^{k}$-type of $(G,v)$ is the collection of all $C^{k}$ formulas $\phi(x)$ in one free variable such that $G\vdash\phi[v]$. We write $u\equiv^{k}v$ to indicate that $(G,u)$ and $(G,v)$ have the same $C^{k}$-type. This equivalence relation is characterized by the bijection game of Hella. We same that a graph is $C^{k}$ rigidt if no two vertices have the same $C^{k}$-type. The Hella bijection game can be used to establish the following:
+\par
+Proposition 2 REF
+\par
+IT is also known that equivalence in $C^{k+1}$ is the same as indistinguishability in the $k$-dimensional Weisfeiler-Leman algorithm for GI. This is a significant generalization of the method of vertex-refinement.
+\par
+Hence, if $\phi$ is a homogeneous system of equations that is strongly $k$-locally consistent, then $G_{\phi}$ is rigid but not $C^{k}$ rigid. Such graphs should be hard for Traces. Moreover, choosing $\phi$ at a random distribution $H(m,n)$ for suitably large values of $m$ and $n$ should ensure that $\phi$ has both these properties with high probability. 

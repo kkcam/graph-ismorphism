@@ -1,0 +1,32 @@
+graph G
+{
+graph [center="true", size="10.00, 6.18", ratio="fill", ranksep="0.25", nodesep="0.40",
+       outputorder="edgesfirst", overlap="scale", layout="dot"];
+node  [shape="circle", width="0.50", height="0.50", fixedsize="true",
+       style="filled", color="black",
+       fontsize="13", fontname="Arial Narrow"];
+node  [color="black", fontcolor="black"]
+     0 [fontsize="21.66", fillcolor="#FF9944"]
+     1 [fontsize="21.66", fillcolor="#FF9944"]
+     2 [fontsize="21.66", fillcolor="#FF9944"]
+     3 [fontsize="21.66", fillcolor="#FF9944"]
+     4 [fontsize="21.66", fillcolor="#FF9944"]
+     5 [fontsize="21.66", fillcolor="#FF9944"]
+     6 [fontsize="21.66", fillcolor="#FF9944"]
+     7 [fontsize="21.66", fillcolor="#FF9944"]
+     8 [fontsize="21.66", fillcolor="#FF9944"]
+     9 [fontsize="21.66", fillcolor="#FF9944"]
+edge  [penwidth="0.8", color="black", weight="10"];
+0 -- 6;
+0 -- 7;
+1 -- 8;
+1 -- 9;
+2 -- 6;
+2 -- 8;
+3 -- 7;
+3 -- 9;
+4 -- 6;
+4 -- 9;
+5 -- 7;
+5 -- 8;
+}

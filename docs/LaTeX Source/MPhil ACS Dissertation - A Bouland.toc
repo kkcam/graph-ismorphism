@@ -1,0 +1,31 @@
+\contentsline {chapter}{\numberline {1}Introduction}{2}
+\contentsline {section}{\numberline {1.1}Graph Isomorphism and its Classical Complexity}{2}
+\contentsline {section}{\numberline {1.2}Parameterized Complexity}{3}
+\contentsline {section}{\numberline {1.3}Work completed in this dissertation}{4}
+\contentsline {chapter}{\numberline {2}The status of ${\ensuremath {\mathsf {GI}}}$ in the Parameterized Complexity Hierarchy}{5}
+\contentsline {section}{\numberline {2.1}Known Poly-time algorithms}{5}
+\contentsline {section}{\numberline {2.2}Parameterizations Known to be Fixed-Parameter Tractable}{5}
+\contentsline {subsection}{\numberline {2.2.1}Size of largest colour class (coloured graph isomorphism)}{5}
+\contentsline {subsection}{\numberline {2.2.2}Largest Multiplicity of an Eigenvalue}{6}
+\contentsline {subsection}{\numberline {2.2.3}Tree distance width and Path distance width}{6}
+\contentsline {subsection}{\numberline {2.2.4}Maximum size of a simplicial component}{7}
+\contentsline {subsection}{\numberline {2.2.5}Size of feedback vertex set}{7}
+\contentsline {section}{\numberline {2.3}Parameterizations Known to be in ${\ensuremath {\mathsf {XP}}}$}{7}
+\contentsline {subsection}{\numberline {2.3.1}Tree-width and Path-width}{7}
+\contentsline {subsection}{\numberline {2.3.2}Genus}{8}
+\contentsline {subsection}{\numberline {2.3.3}Maximum Degree}{8}
+\contentsline {subsection}{\numberline {2.3.4}Size of the smallest excluded minor}{9}
+\contentsline {section}{\numberline {2.4}The way forward}{9}
+\contentsline {chapter}{\numberline {3}Max Leaf Number and Vertex Cover Number}{11}
+\contentsline {section}{\numberline {3.1}Max Leaf Number}{11}
+\contentsline {section}{\numberline {3.2}Vertex Cover Number}{16}
+\contentsline {chapter}{\numberline {4}Crossing Number}{19}
+\contentsline {section}{\numberline {4.1}Introduction}{19}
+\contentsline {section}{\numberline {4.2}Reducing Crossing Number to Pathwidth}{22}
+\contentsline {section}{\numberline {4.3}Future work to be done}{26}
+\contentsline {chapter}{\numberline {5}Tree-Depth}{28}
+\contentsline {section}{\numberline {5.1}Introduction }{28}
+\contentsline {section}{\numberline {5.2}A potential proof that $({\ensuremath {\mathsf {GI}}},$tree-depth$)\in {\ensuremath {\mathsf {FPT}}}$}{31}
+\contentsline {section}{\numberline {5.3}Bounding the number of roots of a decomposition}{36}
+\contentsline {chapter}{\numberline {6}Conclusions}{38}
+\contentsline {section}{\numberline {6.1}Acknowledgements}{38}

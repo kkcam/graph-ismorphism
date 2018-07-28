@@ -1,0 +1,39 @@
+%!TEX root = ../thesis.tex
+%*******************************************************************************
+%*********************************** First Chapter *****************************
+%*******************************************************************************
+% Andy Pitts
+% Haaroon
+
+\chapter{Introduction}  %Title of the First Chapter
+
+\ifpdf
+    \graphicspath{{Chapter1/Figs/Raster/}{Chapter1/Figs/PDF/}{Chapter1/Figs/}}
+\else
+    \graphicspath{{Chapter1/Figs/Vector/}{Chapter1/Figs/}}
+\fi
+Determining if two graphs $G=(V,E)$ and $G'=(V',E')$ are identical is equivalent to questioning the existence of a bijective function between vertex sets $V$ and $V'$ which preserves edges. If there is such a function $f:V \rightarrow V'$, then we say that the graphs are isomorphic to one another $G{\simeq}G'$ and that there is an isomorphism $f$. This is the graph isomorphism problem (GI), and is in essence the question of graph equality and the focus of our report.  GI has long existed from the dawn of computer science and discrete mathematics. It is a fundamental property of graphs in graph theory; its computation, however, is not straightforward. Nonetheless, the problem has spawned efficient GI solvers such as Nauty \cite{mckay1981practical}, Traces \cite{mckay2014practical}, Bliss \cite{junttila2007engineering}, Conauto \cite{lopez2011conauto} among others to solve the problem.
+\par
+Babai et al. proved that worst-case complexity of the problem was ${exp(O\sqrt{n\log n})}$ in 1983 by means of a theoretical algorithm \cite{babai1983computational}. After recent improvements in 2015 by Babai, a professor of mathematics in Chicago University, proved that it is now known to be ${exp((log \ n)^{O(1)}))}$ through a related problem known as String Isomorphism \cite{babai2016graph}. From his most recent work, the proof implied that GI is computable in quasi-polynomial time, that is, slower than polynomial-time, yet not as slow as exponential-time. In other words, determining if an isomorphism exists between two graphs is exponential in some logarithmic scale. Since we can easily determine if a bijection is an isomorphism, we know that the problem is in the complexity class NP. However, we cannot classify it is either P or NP-Complete. If $P\neq NP$, then we say that GI is a problem in NP-intermediate; in NP but neither P nor NP-Complete.
+\newpage
+Babai concluded his paper by noting that he does provide a worst-case complexity abstractly, but he does not contribute to the complexity of GI solving implementations. These implementations are heuristic algorithms which perform GI solving using search heuristic methods, and not the algorithm which Babai provides. The complexity of such solvers remains unknown, due to their intricate techniques. He asks, "Does there exist an infinite family of pairs of graphs on which these heuristic algorithms fail to perform efficiently? The search for such pairs might turn up interesting families of graphs" \cite{babai2016graph}. Our work addresses this question, and is of importance in understanding boundaries of computational complexity. 
+\par
+We intend to construct a new type of graph that executes slowly on GI solvers. In doing so, provide a new benchmark in worst-case complexity for implementations that Babai mentions. Since the worst-case complexity cannot be easily determined, GI solvers typically use a variety of graphs, differing in size and shape, to determine their performance. In the work of Piperno et al, Traces was tested using graphs from different families, such as CFI \cite{cai1992optimal}, Miyazaki \cite{miyazaki1997complexity}, random graphs with differing edge probabilities and more. Our work is to present another difficult case of benchmark graph which will run slower than the ones used in benchmark tests. We use Traces since it outperforms its competitors for most cases of difficult graph classes \cite{mckay2014practical}. 
+\par
+The report is structured as follows:
+\begin{itemize}
+	\item Chapter 2 provides the background knowledge of the constructions proposed, including basic graph theory and related works providing references and a point of further reading.
+	\item Chapter 3 contains our requirements. This is important in reproducing the work and will help to understand the fundamental choices in implementation.  The project will utilise a number of tools, which will result in numerous considerations. 
+	\item Chapter 4 encapsulates how the design was realised to aid understanding of the codebase. It expands on the choice of parameters, and what this resulted in executing code. This is important for further implementations to take into consideration. 
+	\item Chapter 5 evaluates and analyses results, with emphasis on what parameters entailed. 
+	\item Chapter 6 summarises the project, providing a point of departure for further work and refinement.
+\end{itemize}
+
+%Quantities which are exponential in some power of a logarithm are called “quasipolynomial.”
+
+%But the main result is actually a quasipolynomial time algorithm for a different, more general problem called string automorphism.
+
+% sNP intermediete
+
+
+% Questions: What does quasipolynomial mean

@@ -1,0 +1,155 @@
+%!TEX root = ../thesis.tex
+%*******************************************************************************
+%****************************** Third Chapter **********************************
+%*****************************************\**************************************
+\chapter{Requirements}
+% **************************** Define Graphics Path **************************
+% What would Anuj write?
+
+\ifpdf
+    \graphicspath{{Chapter3/Figs/Raster/}{Chapter3/Figs/PDF/}{Chapter3/Figs/}}
+\else
+    \graphicspath{{Chapter3/Figs/Vector/}{Chapter3/Figs/}}
+\fi
+The design of our program hinges on finding suitable constructions that match our criteria. Theoretically, two primary requirements must be met. Firstly, to find a set of equations (clauses), each of which contains three literals (variables), from a pool containing n elements. m is the number of equations within the formula. Hence, we must randomly generate a formula $\phi$, which has n literals and m equations, for specified values. $\phi$ must be both $k$-locally consistent and homogeneous. Secondly, to ensure that the set of equations $\phi$ must give rise to a construction, as defined in the Background segment, which has no non-trivial automorphisms. Thus, we will have constructed a graph that encapsulated CFI graphs and multipedes, proving resistant to the backtracking search of Traces.
+\par
+In this portion, we will consider what further requirements must be met, including defining our system conceptually, permitting us to take a reasoned step toward implementation. Furthermore, this allows the reader to reproduce our system without requiring much technical detail, permitting similar systems of different programming languages and so on. 
+
+\section{Solvers}
+Prior to defining system requirements, we must first consider the specification of tools we intend to invoke. Two programs are of importance. One is the GI solver, which we have already identified as Traces, and the other is a SAT solver, of which there are many implementations. To this end, we are able to use SAT solving competitions as a starting point. 
+
+\subsection{Cryptominisat}
+The international SAT solving competition is an annual meet where competitors pit their programs in a race to solve the SAT and UNSAT problem \cite{sat_competitions_2017}. Here lies a choice of open-source software to implement, all of which follow the same DIMACS specification of usage \cite{dimacs_2017}. Many are regularly maintained and well documented.
+\par
+Following the pre-implementation decision of using Python as a programming language of choice, we select Cryptominisat as our solver. Although this package is primarily written in C, it provides compact Python libraries to import and is well maintained on GitHub. Additionally, for reasons other than being awarded fastest solver in its track, we will describe how Cryptominisat can also be of great use in checking for $k$-local consistency and unique satisfiability.
+
+\subsubsection{Input}
+In order to comprehend how homogeneous systems are determined efficiently, we will first consider the DIMACS format previously mentioned. (For an elaborate explanation, see the DIMACS website. For our purposes, we will consider only special cases \cite{dimacs_2017}.)
+\par
+Input to the SAT solvers takes the form of text files. An example is shown below.
+\begin{figure}[htbp!]
+	\captionsetup{justification=justified, singlelinecheck=false}
+	p cnf 4 5 \\
+	1 3 4 0 \\
+	2 -3 4 0 \\
+	1 2 -4 0 \\
+	1 -2 -3 0 \\
+	-1 2 3 0 \\
+	\caption{Example 3-XOR-Formula in DIMACS}
+\end{figure}
+\par
+The first line defines the number of literals and the number of clauses in the cnf formula, 4 and 5 respectively. This is the equivalent of n and m as used in $\phi$. The following lines are cnf clauses. Each clause contains three literals, and is demarcated with the 0 value. Thus, line 2 denotes $(1 \lor 3 \lor 4)$, followed by line 3 stating $\land (2 \lor \lnot3 \lor 4)$ and so on. (Equivalently, $(a \lor c \lor d) \land (b \lor \lnot c \lor d)$). We can translate this syntax into more common mathematical system of equations and CNF formula:
+
+\begin{figure}[htbp!]
+	\centering
+	\begin{minipage}{.4\textwidth}
+		\begin{align*}
+			a + c + d &= 1 \\
+			b - c + d &= 1 \\
+			a + b - d &= 1 \\
+			a - b - c &= 1 \\
+			-a + b + c &= 1 \\
+		\end{align*}
+	\end{minipage}
+	$\iff$
+	\begin{minipage}{.4\textwidth}
+		\begin{align*}
+			(a \lor c \lor d) \land \\
+			(b \lor \lnot c \lor d) \land \\
+			(a \lor b \lor \lnot d) \land \\
+			(a \lor \lnot b \lor \lnot c) \land \\
+			(\lnot a \lor b \lor c) \\
+		\end{align*}    
+	\end{minipage}
+\end{figure}
+
+Evidently, there is a satisfying value for these example: $a=0, b=1, c=0, d=1$ or $a=False, b=True, c=False, d=True$.
+\par
+Similarly, we have the following example input for an XOR-Formula, although CNF and XOR can be readily inferred from one another without the need to change syntax:
+\begin{figure}[htbp!]
+	\centering
+	\begin{minipage}{.2\textwidth}
+		p cnf 6 6 \\
+		x2 3 5 0 \\
+		x2 3 6 0 \\
+		x3 4 5 0 \\
+		x1 2 4 0 \\
+		x2 5 6 0 \\
+		x2 3 4 0 \\
+	\end{minipage}
+	$\iff$
+	\begin{minipage}{.2\textwidth}
+		\begin{align*}
+			b + c + e &= 0 \\
+			b + c + f &= 0 \\
+			c + d + e &= 0 \\
+			a + b + d &= 0 \\
+			b + e + f &= 0 \\
+			b + c + d &= 0 \\
+		\end{align*}
+	\end{minipage}
+	$\iff$
+	\begin{minipage}{.2\textwidth}
+		\begin{align*}
+			False(b \oplus c \oplus e) \land \\
+			False(b \oplus c \oplus f) \land \\
+			False(c \oplus d \oplus e) \land \\
+			False(a \oplus b \oplus d) \land \\
+			False(b \oplus e \oplus f) \land \\
+			False(b \oplus c \oplus d) \land \\
+		\end{align*}    
+	\end{minipage}
+\end{figure}
+
+The notable difference in the syntax of the input is that we now prepend $x$ at the beginning of each line to demarcate an XOR clause. Note that this is also a homogeneous system that is uniquely satisfiable and gives rise to our desired construction $G_B$.
+\par
+This distinction is important as we have more than one method of validating unique satisfiability, which will ultimately effect the running time and space complexity of our algorithm. Specifically in searching for uniquely satisfiable set of clauses, that are on the threshold of satisfiability. As systems become larger, or closer to the threshold, the running time is expected to increase exponentially.
+
+\subsubsection{Unique satisfiability}
+Given Cryptominisat allows input in the form of mixed CNF and XOR clauses, we have to solutions to check for uniquely satisfiable and homogeneous solutions. We use uniquely satisfiable systems of equations as a replacement for the $odd$ property of multipedes, rendering them rigid. 
+\par
+Method A: Insert an additional XOR clause which contains a single literal. Then check for satisfiability. If for any of these literals there is a satisfying argument, then there is another solution to the system of equations which is not the all-zero solution. This is the only option if we are enforced to use strictly XOR clauses. However, Cryptominisat provides us the functionality of mixing XOR and CNF clauses.
+\par
+Method B: Insert an additional OR clause which contains all literals. Then check for satisfiability. If this statement is TRUE, then at least one literal must be TRUE for the statement to hold. Thus, there is another solution other than the all-zero solution.
+\par
+Both solutions have their caveats. The first solution would require $n$ repetitions to check for satisfiability. As these systems become large, validating a single system of equations may take a long period of time, but adds only small amount of complexity to the problem. Whereas the second solution would require that the XOR solver permit a combination of XOR systems and OR systems of different sizes, with one clause containing $n$ variables. This can be problematic as n becomes large complexity wise, but requires only one check. Depending on how the SAT solver manages, both options are available to test.
+
+\subsubsection{$k$-local consistency}
+The validation of $k$-local consistency of a system of equations is much more difficult than a simple check of a logical statement. 
+\par
+One way would be to locate uniquely satisfiable homogeneous systems which execute faster with Gaussian elimination working in the SAT solving algorithm, in contrast to the same system executing on a solver without this feature. Thus, we could compare a systems execution time on a SAT solver with Gaussian elimination to one without. Two separate algorithms would be required to make this comparison. Furthermore, Gaussian elimination is not central to these efficient algorithms, as we will see later. However, Cryptominisat does provide an option to build without this feature. Hence, rather than utilise two separate programs, we are able to build the same program twice with different algorithms. Thus eliminating the need to facilitate two separate packages, which will save implementation time.
+\par
+In checking $k$-local consistency using this feature, we would invoke Cryptominisat twice, once with "Gauss-On" and then with "Gauss-Off", on a uniquely satisfiable 3-XOR-Formula. We would take systems which execute faster with Gauss-On versus Gauss-Off. Those systems which have a larger discrepancy in times are deemed as more likely to be $k$-locally consistent, and would result in slower execution times as a construction. These are the systems which we are looking for.  
+
+\newpage
+\subsection{Traces}
+Traces is our GI solver of choice. It has its own specifications of input, namely the DIMACS and \emph{Dreadnaut} standards. The graph constructions available on the Traces website are of these varieties, which are provided to reproduce benchmark tests and experiment with the suite \cite{piperno_2017}. We will use a number of these packages available to compare the performance of our construction. We intend to reproduce the benchmarks, and go further by involving more packages and extending the ones available, that is, creating larger instances of random graphs. Since we intend to execute numerous packages, we must implement an efficient way of executing them. Our goal is to run a family of graphs sequentially, and record execution times. Our construction will be packaged similarly to these graphs.
+
+\subsubsection{Dreadnaut}
+Executing graphs on Traces comes in a variety of implementations, however, we will be concerned with the well-documented and simple interface that is Dreadnaut. Dreadnaut is a tool that permits us to invoke both Nauty and Traces, with a variety of parameters. It is a command line tool provided in the Nauty/Traces suite which opens a shell for subroutines. Thus, we are able to invoke this tool by means of system class from our Python implementation. The major design issue is that we must use the \emph{.dre} (Dreadnaut) filetype in passing stored graphs as input, and not the generic DIMACS format. Therefore, in outputting our construction, we must adhere to this syntax.
+
+\subsubsection{Benchmarks}
+In reproducing benchmark tests, there is the issue of fairly testing graphs against one another. Hence, a suitable environment for executing constructions is required. For this issue, we consider using a machine that is uninterrupted by system processes. Traces does provide a means of accurately measuring execution times, however, this requires multiple executions of the same graph instance, which becomes costly as we increase the size of graphs. In addition, to attain sub-second timings, many repetitions must be executed to attain these values. This is problematic even for small graphs, where sub-second differences matter. Therefore, a makeshift method of recording times is presented, using the times of system calls. (Both Traces and system call times are captured in testing, which showed minor differences in times.) All packages are therefore timed in this manner on an external machine whose sole purpose is to conduct experiments. Moreover, many requirements produced in the benchmarks tended to run for very long periods of time, and had to be bounded by some timeout value. An appropriate value is chosen at the time of implementation. 
+
+\section{Software Requirements}
+Now that we have defined the requirements of the major tools utilized, we will describe the requirements of our implementation. These are more general issues, rather than design choices enforced by external software. Our product must meet these specified areas, in addition to the issues raised by tools. 
+
+\subsection{Data Management}
+We will be handling files in storing and executing our data, as well as the graphs provided by Traces. Hence, we will need to program our system to manipulate files, such as stored XOR-Formulas and constructions., which will be used as input to implemented tools. A database could be utilised, although, in our case, we will use the (Linux) filesystem as storage. This will allow us to transfer files as required, rather than having to persist in some datastore. It is important to ensure these files are stored, since locating difficult constructions will take time. The stored files will be provided along with our own package, which will be available as an open-source repository which also houses installation information \cite{quasipolynomial}.
+
+\subsection{Reproducibility}
+Ensuring that our results and findings are easily verifiable and reproducible, we provide a GitHub repository where all our work is publicly available. We intend to properly document our codebase, including instructions on how to install our package.
+\par
+As a requirement, we should be able to reproduce finding and constructing systems, execute graphs and benchmarks using Traces, and any other important discoveries we make. The constructions we find will be tend to the .dre specification, and will appear similar to one of the benchmark graph packages provided by Traces.
+
+\subsection{Resources}
+Our construction must be small enough to execute on Traces, yet be easy to find given the right parameters. Ideally, we would like our system to be located much faster than the execution time on Traces, so that we can build a database of constructions quickly. We therefore have two resource requirements: space and time, on our tools and system hardware.
+\par
+Traces is prone to exceed its allocated memory and crash or invoke thrashing of loading from secondary memory. Hence, we must keep this in mind when setting up our test server. Instances at given size will inevitably be too large for a system to handle in memory. 
+\par
+The outcome of executing systems on our SAT solver was unknown, however, we intended to implement a timeout similar to the one utilised in Traces benchmarks. This can be problematic as we will require multiple runs to locate $k$-locally consistent systems, so some upper bound must be put in place for an efficient search. Enough memory and a time bound must be provided for both of our tools, which will be manipulating our constructions. Both in searching for constructions and executing constructions, we expect to reach execution times within the scale of hours. Hence, one can expect some very difficult instances or a group of instances to take many days to execute. Moreover, it is unknown how it will take to find suitable systems at large values of $m$ and $n$. We expect a sparse amount along the threshold of satisfiability. Hence, searching, validating and executing graphs and systems will take a long period of time. This is why a process must remain uninterrupted for many days on our test server. 
+
+
+
+
+
