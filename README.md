@@ -3,9 +3,7 @@ This package provides logic in generating graphs from xor systems to be executed
 1. Produce a random graph as decribed in the paper.
 2. Check for 'unique satisfiability' using cryptominisat.
 3. Check the graph for automorphisms using nauty.
-
-
-
+ 
 ## Requirements
 * Linux OS
 * Python 2.7 and various packages such as matplotlib and numpy. 
@@ -17,9 +15,9 @@ CDEGI requires two main external components. One is a SAT Solver (cryptominisat)
 
 This project requires the cryptominisat program to be available in the folder "/assets/sat/cryptominisat/build/cryptominisat5". (The gauss off build must be in the "/assets/sat/cryptominisat/build_gauss/cryptominisat5" folder). An untested built version is provided with the repo, which can be replaced.
 
-Nauty can be installed using 'sudo apt install nauty'. However, the program actually used is 'dreadnaut', which must be installed as a executable on the OS. 
+Nauty can be installed using 'sudo apt install nauty'. However, the program actually used is 'dreadnaut', which must be installed as a executable on the OS (i.e. we should be able to run 'dreadnaut' from the terminal).
 
-Various other components, such as installing the plotting library and dretodot are not mentioned here.
+Various other components, such as installing the plotting library and python libraries are not mentioned here.
 
  
  ## How to use
