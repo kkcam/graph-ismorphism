@@ -29,4 +29,4 @@ Various other components, such as installing the plotting library and python lib
  * main.py binds the logic of the previous files - tests are provided.
 
 ### Prebuilt Graphs For Dreadnaut
-Graphs varying in complexity, generated using different parameters, are provided within the assets/construction_packages folder.
+Graphs varying in complexity, generated using different parameters, are provided within the assets/construction_packages folder. These graphs are in the .dre format and are compatible with dreadnaut.
