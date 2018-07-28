@@ -45,6 +45,3 @@ After installation
 cryptominisat_simple -verb=0 [filename]
 ```
 https://github.com/msoos/cryptominisat.git
-
-### Todo
-Trello: https://trello.com/b/vjHrJ35r/mphil
