@@ -1,47 +1,31 @@
-# MPhil
-This package provides logic in generating graphs from xor systems to be executed on Traces.
+# Constructing Difficult Examples of Graph Isomorphism [CDEGI] Source Code
+This package provides logic in generating graphs from xor systems to be executed on Traces. It is essentially a three part system:
+1. Produce a random graph as decribed in the paper.
+2. Check for 'unique satisfiability' using cryptominisat.
+3. Check the graph for automorphisms using nauty.
+
+
 
 ## Requirements
-### OS
-Linux
+* Linux OS
+* Python 2.7 and various packages such as matplotlib and numpy. 
 
-### Packages
-```
-Traces
-Cryptominisat
-sudo apt install nauty
-sudo apt install python-tk
-```
+## Installation 
+CDEGI requires two main external components. One is a SAT Solver (cryptominisat) and the other is a GI Solver (nauty).
+* Installation of Cryptominisat: https://github.com/msoos/cryptominisat.git
+* Installation of Nauty: http://pallini.di.uniroma1.it/
 
-### Python 2.7
-Packages:
-```
-cryptominisat
-numpy
-matplotlib
-...
-```
+This project requires the cryptominisat program to be available in the folder "/assets/sat/cryptominisat/build/cryptominisat5". (The gauss off build must be in the "/assets/sat/cryptominisat/build_gauss/cryptominisat5" folder). An untested built version is provided with the repo, which can be replaced.
 
-## Building
-...
+Nauty can be installed using 'sudo apt install nauty'. However, the program actually used is 'dreadnaut', which must be installed as a executable on the OS. 
 
+Various other components, such as installing the plotting library and dretodot are not mentioned here.
 
-## Additional Information
-### How to use dretodot
-```
-[nauty installation]./dretodot ./graphs/graph.dre ./out.dot
-```
-
-### How to use nauty
-See Pdf
-
-### How to use graphviz
-man graphviz
-dotty ...
-
-### How to use cryptominisat
-After installation
-```
-cryptominisat_simple -verb=0 [filename]
-```
-https://github.com/msoos/cryptominisat.git
+ 
+ ## How to use
+ python main.py
+ 
+ ### Decriptions
+ * sat.py houses the logic for testing and generating uniquly satisfiable graphs using cryptominisat.
+ * gi.py houses the logic for testing for automorphisms using dreadnaut aka nauty.
+ * main.py binds the logic of the previous files - tests are provided.
