@@ -27,3 +27,6 @@ Various other components, such as installing the plotting library and python lib
  * sat.py houses the logic for testing and generating uniquly satisfiable graphs using cryptominisat.
  * gi.py houses the logic for testing for automorphisms using dreadnaut aka nauty.
  * main.py binds the logic of the previous files - tests are provided.
+
+### Prebuilt Graphs For Dreadnaut
+Graphs varying in complexity, generated using different parameters, are provided within the assets/construction_packages folder.
