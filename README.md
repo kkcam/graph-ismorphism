@@ -3,8 +3,7 @@ This package provides logic in generating graphs from xor systems to be executed
 
 ## Requirements
 ### OS
-UNIX-like OS, which tends to POSIX api.
-
+Linux
 
 ### Packages
 ```
