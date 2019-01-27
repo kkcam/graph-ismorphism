@@ -6,6 +6,7 @@ RUN apt-get install python -y
 RUN apt-get install build-essential cmake -y
 RUN apt-get install python-dev -y
 RUN apt-get install python-pip -y
+RUN apt-get install nauty -y
 RUN pip install numpy
 RUN pip install networkx
 RUN pip install matplotlib
