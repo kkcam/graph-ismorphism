@@ -516,7 +516,18 @@ def test_16():
                           update_strongly_k=True,
                           gi=Gi())
 
-
+def test_17():
+    fh = FileHandler()
+    data = fh.read_from_file("../assets/results/sat/0-n-10000_0-m-10000_step-100/results")
+    for d in data:
+        print "{0}  {1} a".format(d[1], d[2])
+    i = [10,20,30,40,50,60,70,80,90,100, 110, 120]
+    gi = Gi()
+    for j in i:
+        a = gi.run_graph_instance("ga_vs_gb", "{0}_{1}_A.dre".format(j,j))
+        b = gi.run_graph_instance("ga_vs_gb", "{0}_{1}_B.dre".format(j,j))
+        print "{0}  {1} a".format(j,a["time"],1)
+        print "{0}  {1} b".format(j,b["time"],1)
 
 
 if __name__ == "__main__":
@@ -539,15 +550,4 @@ if __name__ == "__main__":
     # test_14() # Search
     # test_15() # Search
     # test_16() # Search
-
-    fh = FileHandler()
-    data = fh.read_from_file("../assets/results/sat/0-n-10000_0-m-10000_step-100/results")
-    for d in data:
-        print "{0}  {1} a".format(d[1], d[2])
-    i = [10,20,30,40,50,60,70,80,90,100, 110, 120]
-    gi = Gi()
-    for j in i:
-        a = gi.run_graph_instance("ga_vs_gb", "{0}_{1}_A.dre".format(j,j))
-        b = gi.run_graph_instance("ga_vs_gb", "{0}_{1}_B.dre".format(j,j))
-        print "{0}  {1} a".format(j,a["time"],1)
-        print "{0}  {1} b".format(j,b["time"],1)
+    test_17() # Default
