@@ -1,0 +1,9 @@
+version: '3.4'
+
+services:
+    default:
+        build: 
+            context: .
+            dockerfile: Dockerfile.local
+        volumes:
+            - .:/home/graph-isomorphism
