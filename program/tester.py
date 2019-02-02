@@ -307,3 +307,11 @@ class Tester(object):
             b = gi.run_graph_instance("ga_vs_gb", "{0}_{1}_B.dre".format(j,j))
             print "{0}  {1} a".format(j,a["time"],1)
             print "{0}  {1} b".format(j,b["time"],1)
+
+    def test_18(self): 
+        main = Main()
+        main.execute_graphs(outstanding=True,
+                            timeout=10800,
+                            save=True)
+
+        main.plot_graphs_results(save=True)
