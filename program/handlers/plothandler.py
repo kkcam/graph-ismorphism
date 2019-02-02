@@ -4,17 +4,13 @@
 Logic that handles the plotting of data into graphs
 """
 
-import matplotlib.pyplot as plt
+import matplotlib
 from mpl_toolkits.mplot3d import Axes3D
-from matplotlib import pyplot as PLT
-from matplotlib import cm as CM
-from matplotlib import mlab as ML
 import numpy as np
 from numpy.random import uniform, seed
 from matplotlib.mlab import griddata
 import matplotlib.pyplot as plt
 import operator
-import matplotlib.pyplot as plt
 
 
 class PlotHandler(object):
