@@ -14,11 +14,8 @@ RUN pip install matplotlib
 RUN apt-get update
 RUN apt-get install nano -y
 RUN mkdir -p /root/.config/matplotlib
-RUN touch /root/config/matplotlib/matplotlibrc
-RUN echo "backend: Agg" > ~/.config/matplotlib/matplotlibrc
-
-# Following line must be run manually
-# apt-get install python-tk -y
+RUN touch /root/.config/matplotlib/matplotlibrc
+RUN echo "backend: Agg" > /root/.config/matplotlib/matplotlibrc
 
 # Set up code
 WORKDIR /home
@@ -32,9 +29,10 @@ RUN make install
 RUN ldconfig
 WORKDIR /home/graph-isomorphism/program
 
-# Following line must be run manually
-# python main.py
-
 # Run
 EXPOSE 5000
 ENTRYPOINT ["tail", "-f", "/dev/null"]
+
+# Following lines must be run manually
+# apt-get install python-tk -y
+# python main.py
