@@ -33,9 +33,12 @@ Graphs varying in complexity, generated using different parameters, are provided
 
 ## Program usages
 Conauto: graph-isomorphism/assets/programs/conauto-2.03/bin/conauto -aut -dv {dimacsGraph}
+
 Bliss: graph-isomorphism/assets/programs/bliss-0.73/bliss {dimacsGraph}
+
 Traces: dreadnaut
 \> At -a V=0 -m <"{dreGraph.dre}" x q
+
 Sparse Nauty: dreadnaut
 \> As -a V=0 -m <"{dreGraph.dre}" x q
     
