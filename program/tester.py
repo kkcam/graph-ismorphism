@@ -295,6 +295,7 @@ class Tester(object):
                             update_strongly_k=True,
                             gi=Gi())
 
+
     def test_17(self):
         fh = FileHandler()
         data = fh.read_from_file("../assets/results/sat/0-n-10000_0-m-10000_step-100/results")
@@ -308,6 +309,7 @@ class Tester(object):
             print "{0}  {1} a".format(j,a["time"],1)
             print "{0}  {1} b".format(j,b["time"],1)
 
+
     def test_18(self): 
         main = Main()
         main.execute_graphs(outstanding=True,
@@ -315,3 +317,8 @@ class Tester(object):
                             save=True)
 
         main.plot_graphs_results(save=True)
+
+
+    def test_19(self):
+        main = Main()
+        main.execute_graphs(timeout=5400, save=True, useAll=True)
