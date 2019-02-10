@@ -40,11 +40,10 @@ class Gi(object):
             # Else run traces
             if "dimacs" in graph:
                 results[graph + "_bliss"] = self.run_graph(graphs[graph], graph, "bliss", **kwargs)
+                results[graph + "_conauto"] = self.run_graph(graphs[graph], graph, "conauto", **kwargs)
             else:
+                results[graph + "_nauty"] = self.run_graph(graphs[graph], graph, "nauty", **kwargs)
                 results[graph] = self.run_graph(graphs[graph], graph, "traces", **kwargs)
-            # pp = pprint.PrettyPrinter(indent=4)
-            # pp.pprint(graph)
-            # exit()
 
         return results
 
@@ -102,14 +101,16 @@ class Gi(object):
         # Init
         ph = ProcessHandler()
         path = "./../assets/graphs/" + graph + "/" + graph_instance
-        program = kwargs.get("program", "traces")
-        process = False
+        is_dimacs = self.is_dimacs(graph)
 
-        if self.is_dimacs(graph):
+        if is_dimacs:
+            process = False
             nodes = ph.run_command("head '" + path + "'")[0].split(" ")[2]
+            program = kwargs.get("program", "bliss")
         else:
             nodes = re.search("(n=?)=\d+", ' '.join(ph.run_command("head '" + path + "'"))).group(0)[2:]
             process = ph.open_process("dreadnaut")
+            program = kwargs.get("program", "traces")
 
         command = self.get_command(program, path)
 
@@ -125,7 +126,7 @@ class Gi(object):
             print "Timed out: Took too long to validate"
             time = -1
             d_time = -1
-            if process:
+            if not is_dimacs:
                 process.kill()
                 process.terminate()
         finally:
@@ -145,6 +146,14 @@ class Gi(object):
         time_string_split = out_time_string.split("\t")
         d_time = time_string_split[1].split(" ")[0]
 
+        return time, d_time
+    
+    def run_conauto(self, command):
+        ph = ProcessHandler()
+        time, out = ph.run_command_timed(command)
+        out_time_string = out[len(out) - 1]
+        time_string_split = out_time_string.split(" ")
+        d_time = time_string_split[1]
         return time, d_time
 
     def run_nauty_traces(self, process, command):
@@ -293,7 +302,7 @@ class Gi(object):
         elif program == "nauty":
             return 'As -a V=0 -m <"' + path + '" x q'
         elif program == "conauto":
-            return "./../assets/programs/conauto-2.03/bin/conauto -aut -dv " + path
+            return "./../assets/programs/conauto-2.03/bin/conauto-2.03 -aut -dv " + path
 
     def is_dimacs(self, graph):
         return "dimacs" in graph
@@ -307,7 +316,7 @@ class Gi(object):
         elif program == "traces" or program == "nauty":
             time, d_time = self.run_nauty_traces(process, command)
         elif program == "conauto":
-            time, d_time = self.run_bliss(command)
+            time, d_time = self.run_conauto(command)
 
         return time, d_time
 
@@ -317,3 +326,7 @@ class Gi(object):
 
         return graph + ".txt"
         
+    def pp_helper(self, data):
+        pp = pprint.PrettyPrinter(indent=4)
+        pp.pprint(data)
+        exit()
