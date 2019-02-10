@@ -44,3 +44,5 @@ Sparse Nauty: dreadnaut
 
 \> As -a V=0 -m <"{dreGraph.dre}" x q
     
+## Useful Info
+tmux can be used to monitor long running processes. See here https://hackernoon.com/a-gentle-introduction-to-tmux-8d784c404340. 
