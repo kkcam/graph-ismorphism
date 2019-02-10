@@ -38,3 +38,5 @@ ENTRYPOINT ["tail", "-f", "/dev/null"]
 # Following lines must be run manually
 # apt-get install python-tk -y
 # python main.py
+# make /home/graph-isomorphism/assets/programs/conauto-2.03/src
+# make /home/graph-isomorphism/assets/programs/bliss-0.73

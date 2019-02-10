@@ -18,15 +18,17 @@ This project requires the cryptominisat program to be available in the folder "/
 Nauty can be installed using 'sudo apt install nauty'. However, the program actually used is 'dreadnaut', which must be installed as a executable on the OS (i.e. we should be able to run 'dreadnaut' from the terminal).
 
 Various other components, such as installing the plotting library and python libraries are not mentioned here.
+ 
+### Docker
+The provided Dockerfile can be used to determine how to set up the environment within ubuntu. Alternatively, the public image repository kashkrk/gi can be used as a prebuilt environment to set up experiments.
 
+## How to use
+python main.py
  
- ## How to use
- python main.py
- 
- ### Decriptions
- * sat.py houses the logic for testing and generating uniquly satisfiable graphs using cryptominisat.
- * gi.py houses the logic for testing for automorphisms using dreadnaut aka nauty.
- * main.py binds the logic of the previous files - tests are provided.
+### Decriptions
+* sat.py houses the logic for testing and generating uniquly satisfiable graphs using cryptominisat.
+* gi.py houses the logic for testing for automorphisms using dreadnaut aka nauty.
+* main.py binds the logic of the previous files - tests are provided.
 
 ### Prebuilt Graphs For Dreadnaut
 Graphs varying in complexity, generated using different parameters, are provided within the assets/construction_packages folder. These graphs are in the .dre format and are compatible with dreadnaut.
