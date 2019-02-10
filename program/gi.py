@@ -13,7 +13,7 @@ from handlers.processhandler import ProcessHandler
 import networkx as nx
 import numpy as np
 import math
-
+import pprint
 
 class Gi(object):
     def run_all_graphs(self, **kwargs):
@@ -34,13 +34,21 @@ class Gi(object):
         :return: 
         """
         results = {}
-
         for graph in graphs:
-            results[graph] = self.run_graph(graphs[graph], graph, **kwargs)
+            # Checking if it is a dimacs graph
+            # If so, run all other programs
+            # Else run traces
+            if "dimacs" in graph:
+                results[graph + "_bliss"] = self.run_graph(graphs[graph], graph, "bliss", **kwargs)
+            else:
+                results[graph] = self.run_graph(graphs[graph], graph, "traces", **kwargs)
+            # pp = pprint.PrettyPrinter(indent=4)
+            # pp.pprint(graph)
+            # exit()
 
         return results
 
-    def run_graph(self, graphs, graph, **kwargs):
+    def run_graph(self, graphs, graph, program, **kwargs):
         """
         Run instances in a graph
         :param graph: 
@@ -53,9 +61,11 @@ class Gi(object):
         save = kwargs.get("save", False)
         outstanding = kwargs.get("outstanding", False)
 
+        graph_name = self.get_filename(graph, program)
+
         # Load previous results
-        if outstanding and graph + ".txt" in run:
-            graph_results = fh.read_from_file("./../assets/graphs_run/{0}.txt".format(graph))
+        if outstanding and graph_name in run:
+            graph_results = fh.read_from_file("./../assets/graphs_run/{0}".format(graph_name))
         else:
             graph_results = []
 
@@ -64,17 +74,19 @@ class Gi(object):
             print "{0} {1}".format(graph_instance, datetime.datetime.now())
 
             # Skip existing graph
-            if outstanding and graph + ".txt" in run:
+            if outstanding and graph_name in run:
                 if any(d['name'] == graph_instance for d in graph_results):
                     continue
 
-
-            graph_results.append(self.run_graph_instance(graph, graph_instance, **kwargs))
+            kwargs["program"] = program
+            result = self.run_graph_instance(graph, graph_instance, **kwargs)
+            
+            graph_results.append(result)
 
             # Save
             if save:
                 print "Saving..."
-                fh.write_to_file("./../assets/graphs_run/" + graph + ".txt", graph_results)
+                fh.write_to_file("./../assets/graphs_run/" + graph_name, graph_results)
 
         return graph_results
 
@@ -90,31 +102,32 @@ class Gi(object):
         # Init
         ph = ProcessHandler()
         path = "./../assets/graphs/" + graph + "/" + graph_instance
-        nodes = re.search("(n=?)=\d+", ' '.join(ph.run_command("head '" + path + "'"))).group(0)[2:]
-        process = ph.open_process("dreadnaut")
+        program = kwargs.get("program", "traces")
+        process = False
 
-        # Set timeout
+        if self.is_dimacs(graph):
+            nodes = ph.run_command("head '" + path + "'")[0].split(" ")[2]
+        else:
+            nodes = re.search("(n=?)=\d+", ' '.join(ph.run_command("head '" + path + "'"))).group(0)[2:]
+            process = ph.open_process("dreadnaut")
+
+        command = self.get_command(program, path)
+
+        # Set timeout (seconds)
         signal.signal(signal.SIGALRM, signal_handler)
         signal.alarm(kwargs.get("timeout", kwargs.get("timeout", 0)))
 
         # Gather results
         try:
-            time, (stdout, stderr) = ph.run_function_timed(process.communicate,
-                                                           ('At -a V=0 -m <"' + path + '" x q',),
-                                                           return_args=True)
-            split = re.search('(time=?) = \d+.\d+\d+', stdout)
-            if split:
-                d_time = split.group(0)[7:]
-            else:
-                time = -1
-                d_time = -1
+            time, d_time = self.run_program(process, command, program)
 
         except TimeoutError:
             print "Timed out: Took too long to validate"
             time = -1
             d_time = -1
-            process.kill()
-            process.terminate()
+            if process:
+                process.kill()
+                process.terminate()
         finally:
             signal.alarm(0)
 
@@ -124,6 +137,29 @@ class Gi(object):
             "time": time,
             "d_time": d_time
         }
+
+    def run_bliss(self, command):
+        ph = ProcessHandler()
+        time, out = ph.run_command_timed(command)
+        out_time_string = out[len(out) - 1]
+        time_string_split = out_time_string.split("\t")
+        d_time = time_string_split[1].split(" ")[0]
+
+        return time, d_time
+
+    def run_nauty_traces(self, process, command):
+        ph = ProcessHandler()
+        time, (stdout, stderr) = ph.run_function_timed(process.communicate,
+                                                (command,),
+                                                return_args=True)
+        split = re.search('(time=?) = \d+.\d+\d+', stdout)
+        if split:
+            d_time = split.group(0)[7:]
+        else:
+            time = -1
+            d_time = -1
+
+        return time, d_time
 
     def load_graphs(self):
         """
@@ -248,3 +284,36 @@ class Gi(object):
                                                          return_args=True)
 
         return time_a > time_b
+
+    def get_command(self, program, path):
+        if program == "bliss":
+            return "./../assets/programs/bliss-0.73/bliss " + path
+        elif program == "traces":
+            return 'At -a V=0 -m <"' + path + '" x q'
+        elif program == "nauty":
+            return 'As -a V=0 -m <"' + path + '" x q'
+        elif program == "conauto":
+            return "./../assets/programs/conauto-2.03/bin/conauto -aut -dv " + path
+
+    def is_dimacs(self, graph):
+        return "dimacs" in graph
+
+    def run_program(self, process, command, program):
+        time = -1
+        d_time = -1
+
+        if program == "bliss":
+            time, d_time = self.run_bliss(command)
+        elif program == "traces" or program == "nauty":
+            time, d_time = self.run_nauty_traces(process, command)
+        elif program == "conauto":
+            time, d_time = self.run_bliss(command)
+
+        return time, d_time
+
+    def get_filename(self, graph, program):
+        if program != "traces":
+            return graph + "_" + program + ".txt"
+
+        return graph + ".txt"
+        

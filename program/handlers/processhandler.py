@@ -70,3 +70,9 @@ class ProcessHandler(object):
         if kwargs.get("return_args"):
             return time, ret
         return time
+    
+    def run_command_timed(self, command):
+        start = timeit.default_timer()
+        out = self.run_command(command)
+        time = timeit.default_timer() - start
+        return time, out
