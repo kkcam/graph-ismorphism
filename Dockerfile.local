@@ -16,6 +16,7 @@ RUN apt-get install nano -y
 RUN mkdir -p /root/.config/matplotlib
 RUN touch /root/.config/matplotlib/matplotlibrc
 RUN echo "backend: Agg" > /root/.config/matplotlib/matplotlibrc
+RUN apt-get install tmux -y
 
 # Set up code
 WORKDIR /home
