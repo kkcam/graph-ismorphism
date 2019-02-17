@@ -153,6 +153,7 @@ class PlotHandler(object):
         y_axis = []
         timed_out_x = []
         timed_out_y = []
+        time = kwargs.get("time", "time") # Can switch between d_time
 
         # Sort nodes
         for result in results[graph]:
@@ -164,7 +165,7 @@ class PlotHandler(object):
             if result['nodes'] in x_axis:
                 pos = x_axis.index(result["nodes"])
                 # y_axis[pos] = "%.2f" % (float(y_axis[pos]) + float(result["time"]) * 0.5) # avg
-                v = y_axis[pos] if y_axis[pos] > result["time"] else result["time"]
+                v = y_axis[pos] if y_axis[pos] > result[time] else result[time]
                 y_axis[pos] = v
                 if result["nodes"] in timed_out_x:
                     pos = timed_out_x.index(result["nodes"])
@@ -172,14 +173,14 @@ class PlotHandler(object):
                 continue
 
             # Deal with timeouts
-            if result["time"] == -1 or result["d_time"] == -1:
+            if result[time] == -1:
                 print "timed out"
-                result["time"] = y_axis[-1]
+                result[time] = y_axis[-1]
                 timed_out_x.append(result['nodes'])
-                timed_out_y.append(result["time"])
+                timed_out_y.append(result[time])
 
             x_axis.append(result['nodes'])
-            y_axis.append(result['time'])
+            y_axis.append(result[time])
         kwargs["timed_out_x"] = timed_out_x
         kwargs["timed_out_y"] = timed_out_y
 

@@ -322,3 +322,7 @@ class Tester(object):
     def test_19(self):
         main = Main()
         main.execute_graphs(timeout=5400, save=True, useAll=True)
+
+    def test_20(self):
+        main = Main()
+        main.plot_graphs_results(save=True, time="d_time")

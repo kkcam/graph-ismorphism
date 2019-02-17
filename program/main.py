@@ -28,5 +28,6 @@ if __name__ == "__main__":
     # tester.test_15() # Search
     # tester.test_16() # Search
     # tester.test_17() # Default
-    # tester.test_18() # Run graphs
-    tester.test_19()
+    # tester.test_18() # Run graphs and plot
+    # tester.test_19() # Run graphs
+    tester.test_20() # Plot graphs
