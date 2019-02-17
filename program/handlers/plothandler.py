@@ -158,6 +158,8 @@ class PlotHandler(object):
         # Sort nodes
         for result in results[graph]:
             result["nodes"] = int(result["nodes"])
+            result["d_time"] = float(result["d_time"])
+
         results[graph].sort(key=operator.itemgetter("nodes"))
         for result in results[graph]:
 
